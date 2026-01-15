@@ -11,7 +11,7 @@ COLORES = {
     # Colores principales - tonos suaves
     'primario': '#4A5568',          # Gris azulado oscuro
     'secundario': '#667EEA',        # Azul lavanda suave
-    'acento': '#7C3AED',            # Púrpura elegante
+    'acento': '#667EEA',            # Azul elegante para botones
 
     # Estados
     'exito': '#48BB78',             # Verde menta suave
@@ -23,7 +23,7 @@ COLORES = {
     'fondo': '#F7FAFC',             # Blanco humo
     'fondo_secundario': '#EDF2F7',  # Gris muy claro
     'fondo_tarjeta': '#FFFFFF',     # Blanco puro
-    'fondo_input': '#FAFAFA',       # Blanco cálido
+    'fondo_input': '#F8F9FA',       # Blanco cálido para inputs
 
     # Texto
     'texto_primario': '#2D3748',    # Gris carbón
