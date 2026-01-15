@@ -1,0 +1,9 @@
+# Requisitos para la aplicación de Gestor de Gastos Mensuales
+
+# Python 3.6 o superior incluye:
+# - tkinter (interfaz gráfica)
+# - sqlite3 (base de datos)
+
+# No se requieren dependencias adicionales
+# La aplicación utiliza únicamente librerías estándar de Python
+

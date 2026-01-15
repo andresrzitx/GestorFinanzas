@@ -1,0 +1,108 @@
+═══════════════════════════════════════════════════════════════
+         🔐 CREDENCIALES DEL ADMINISTRADOR - FINANZAPP
+═══════════════════════════════════════════════════════════════
+
+📧 EMAIL:    admin@finanzapp.com
+🔑 PASSWORD: admin123
+
+═══════════════════════════════════════════════════════════════
+
+⚠️  IMPORTANTE - LEE ESTO:
+
+1. Estas son las credenciales del ADMINISTRADOR principal
+2. DEBES cambiar la contraseña después del primer login
+3. El administrador tiene acceso completo al sistema:
+   - Ver todos los usuarios
+   - Cambiar roles (usuario ↔ admin)
+   - Activar/Desactivar cuentas
+   - Eliminar usuarios
+
+═══════════════════════════════════════════════════════════════
+
+🚀 CÓMO USAR:
+
+1. Ejecuta la aplicación:
+   cd /Users/andres.reyesz/PycharmProjects/ProyectoFinal
+   python main.py
+
+2. En la pantalla de login, ingresa:
+   Email:    admin@finanzapp.com
+   Password: admin123
+
+3. Una vez dentro, si eres admin, verás una pestaña "👨‍💼 Admin"
+   (Nota: La integración del panel aún debe hacerse en app.py)
+
+═══════════════════════════════════════════════════════════════
+
+📝 CREAR EL ADMIN (si no existe):
+
+Ejecuta este comando en la terminal:
+
+cd /Users/andres.reyesz/PycharmProjects/ProyectoFinal
+python3 scripts/crear_admin.py
+
+O manualmente en Python:
+
+from src.database import Database
+db = Database()
+exito, msg = db.registrar_usuario("Administrador", "admin@finanzapp.com", "admin123")
+if exito:
+    db.cambiar_rol_usuario(1, 'admin')
+    print("✅ Admin creado")
+
+═══════════════════════════════════════════════════════════════
+
+🔍 VERIFICAR QUE EL ADMIN EXISTE:
+
+sqlite3 data/usuarios.db "SELECT id, nombre, email, rol FROM usuarios;"
+
+═══════════════════════════════════════════════════════════════
+
+💡 CAMBIAR CONTRASEÑA DESPUÉS:
+
+1. Inicia sesión como admin
+2. Ve a tu perfil/configuración
+3. Cambia la contraseña "admin123" por una segura
+
+O manualmente:
+
+from src.database import Database
+db = Database()
+db.cambiar_password(1, "admin123", "nueva_contraseña_segura")
+
+═══════════════════════════════════════════════════════════════
+
+✅ USUARIOS DE PRUEBA ADICIONALES:
+
+Si quieres crear más usuarios para probar:
+
+Usuario 1:
+Email:    usuario1@test.com
+Password: test123
+Rol:      usuario
+
+Usuario 2:
+Email:    usuario2@test.com
+Password: test123
+Rol:      usuario
+
+Para crearlos:
+db = Database()
+db.registrar_usuario("Usuario Test 1", "usuario1@test.com", "test123")
+db.registrar_usuario("Usuario Test 2", "usuario2@test.com", "test123")
+
+═══════════════════════════════════════════════════════════════
+
+🎯 RESUMEN RÁPIDO:
+
+ADMIN:
+  Email:    admin@finanzapp.com
+  Password: admin123
+  Rol:      admin
+  Acceso:   Panel de administración completo
+
+═══════════════════════════════════════════════════════════════
+
+Última actualización: 15 de Enero de 2026
+FinanzApp v4.0 - Panel de Administración
+
