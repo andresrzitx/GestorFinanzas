@@ -17,13 +17,14 @@ from src.login import VentanaLogin
 from src.app import AplicacionGastos
 
 
-def iniciar_aplicacion(usuario_id: int, nombre_usuario: str):
+def iniciar_aplicacion(usuario_id: int, nombre_usuario: str, rol: str = 'usuario'):
     """
     Inicia la aplicación principal después del login exitoso.
 
     Args:
         usuario_id: ID del usuario autenticado
         nombre_usuario: Nombre del usuario
+        rol: Rol del usuario (por defecto 'usuario')
     """
     root = tk.Tk()
     app = AplicacionGastos(root, usuario_id, nombre_usuario)
