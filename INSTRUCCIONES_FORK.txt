@@ -1,0 +1,188 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    SOLUCIÓN RÁPIDA - CREAR FORK                            ║
+║                   Repository Not Found Error                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PASO 1: Crear el Fork en GitHub (OBLIGATORIO)                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. Abre tu navegador web
+
+2. Ve a esta URL:
+   https://github.com/arezubi/GestorFinanzas
+
+3. Haz click en el botón "Fork" (arriba a la derecha)
+
+   ┌──────────────────────────────────────┐
+   │  ⭐ Star    🍴 Fork    ⬇ Code       │
+   └──────────────────────────────────────┘
+
+4. GitHub te preguntará dónde crear el fork
+   → Selecciona tu cuenta: andresrzitx
+
+5. Espera unos segundos mientras se crea el fork
+
+6. VERIFICA que el fork se creó:
+   → Deberías estar ahora en: https://github.com/andresrzitx/GestorFinanzas
+   → En la parte superior dirá: "forked from arezubi/GestorFinanzas"
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PASO 2: Configurar Autenticación (Primera vez solamente)                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+GitHub ya no acepta contraseñas para Git. Necesitas un Personal Access Token:
+
+1. Ve a: https://github.com/settings/tokens
+
+2. Click en "Generate new token" → "Generate new token (classic)"
+
+3. Configura el token:
+   ┌─────────────────────────────────────────────────────┐
+   │ Note: GestorFinanzas - MacBook                      │
+   │ Expiration: 90 days (o el que prefieras)            │
+   │ Select scopes:                                      │
+   │   ✅ repo                                           │
+   │      ✅ repo:status                                 │
+   │      ✅ repo_deployment                             │
+   │      ✅ public_repo                                 │
+   │      ✅ repo:invite                                 │
+   │      ✅ security_events                             │
+   └─────────────────────────────────────────────────────┘
+
+4. Click en "Generate token" (al final de la página)
+
+5. ⚠️  IMPORTANTE: COPIA EL TOKEN AHORA
+   → Se muestra solo UNA VEZ
+   → Guárdalo en un lugar seguro
+   → Ejemplo: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PASO 3: Hacer Push desde la Terminal                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Abre la terminal en PyCharm o tu terminal favorita:
+
+1. Navega al directorio del proyecto (si no estás ya allí):
+
+   cd /Users/andres.reyesz/PycharmProjects/GestorFinanzas
+
+2. Verifica que los cambios están listos:
+
+   git status
+
+3. Si hay archivos sin commit, haz commit primero:
+
+   git add .
+   git commit -m "Descripción de tus cambios"
+
+4. Haz push a tu fork:
+
+   git push -u origin feat/add-calendar
+
+5. Git te pedirá autenticación:
+
+   Username for 'https://github.com': andresrzitx
+   Password for 'https://andresrzitx@github.com': [PEGA AQUÍ TU TOKEN]
+
+   ⚠️  IMPORTANTE: En "Password", pega el TOKEN que copiaste en el Paso 2
+                   NO uses tu contraseña de GitHub
+
+6. Si todo va bien, verás algo como:
+
+   Enumerating objects: 5, done.
+   Counting objects: 100% (5/5), done.
+   Writing objects: 100% (3/3), 300 bytes | 300.00 KiB/s, done.
+   Total 3 (delta 0), reused 0 (delta 0)
+   To https://github.com/andresrzitx/GestorFinanzas.git
+    * [new branch]      feat/add-calendar -> feat/add-calendar
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PASO 4: Crear Pull Request                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. Ve a: https://github.com/andresrzitx/GestorFinanzas
+
+2. Verás un banner amarillo:
+   ┌────────────────────────────────────────────────────────────┐
+   │ feat/add-calendar had recent pushes                        │
+   │                              [Compare & pull request]      │
+   └────────────────────────────────────────────────────────────┘
+
+3. Click en "Compare & pull request"
+
+4. Completa el formulario:
+   - base repository: arezubi/GestorFinanzas
+   - base: main
+   - head repository: andresrzitx/GestorFinanzas
+   - compare: feat/add-calendar
+
+   - Título: Añadir funcionalidad de calendario
+   - Descripción: Explica qué cambios introduce esta feature
+
+5. Click en "Create pull request"
+
+6. ¡Listo! Ahora arezubi puede revisar y aprobar tus cambios
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ SOLUCIÓN DE PROBLEMAS                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+❌ Error: "Repository not found"
+   → El fork no existe. Ve al Paso 1 y crea el fork.
+
+❌ Error: "Authentication failed"
+   → El token es incorrecto o ya expiró. Genera un nuevo token en el Paso 2.
+   → O estás usando tu contraseña en lugar del token.
+
+❌ Error: "Permission denied"
+   → Verifica que el fork esté en TU cuenta (andresrzitx)
+   → Verifica que el token tenga permisos de "repo"
+
+❌ El comando git push se queda esperando
+   → Presiona Ctrl+C para cancelar
+   → Vuelve a intentar con: git push -u origin feat/add-calendar
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ RESUMEN DE URLs IMPORTANTES                                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+📍 Repositorio original:
+   https://github.com/arezubi/GestorFinanzas
+
+📍 Tu fork (debe crearse primero):
+   https://github.com/andresrzitx/GestorFinanzas
+
+📍 Crear Personal Access Token:
+   https://github.com/settings/tokens
+
+📍 Ver tus repositorios:
+   https://github.com/andresrzitx?tab=repositories
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ COMANDOS ÚTILES                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+# Ver remotos configurados
+git remote -v
+
+# Ver estado de los archivos
+git status
+
+# Ver commits recientes
+git log --oneline -5
+
+# Hacer push
+git push -u origin feat/add-calendar
+
+# Si necesitas cambiar la URL del remote
+git remote set-url origin https://github.com/TU_USUARIO/GestorFinanzas.git
+
+═══════════════════════════════════════════════════════════════════════════════
+
+¿Necesitas ayuda? Revisa los documentos en docs/:
+- CREAR_FORK_Y_PUSH.md - Guía detallada
+- SOLUCION_ERROR_403_GIT.md - Solución a errores de permisos
+- RESOLVER_CONFLICTOS_DB.md - Resolver conflictos en bases de datos
+
+═══════════════════════════════════════════════════════════════════════════════
