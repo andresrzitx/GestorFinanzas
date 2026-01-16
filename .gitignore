@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Databases (opcional - descomentar si prefieres no versionar las DBs)
+# *.db
+# *.sqlite
+# *.sqlite3
+
+# Backups
+*_backup_*.db
+backup/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporal files
+test.txt
+*.tmp
+*.log
+
+# PyCharm
+.idea/

@@ -5,7 +5,6 @@ Módulo de vistas para la aplicación de gastos mensuales.
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
-from typing import Optional
 
 try:
     from .estilos import crear_tarjeta_balance, crear_boton_moderno, COLORES
@@ -114,24 +113,20 @@ class VistaGastosMensual:
             row=2, column=0, sticky=tk.W, padx=5, pady=5
         )
 
-        frame_fecha = ttk.Frame(frame_formulario)
-        frame_fecha.grid(row=2, column=1, columnspan=2, sticky=tk.W, padx=5, pady=5)
+        # Importar el componente de calendario
+        try:
+            from .calendario import BotonCalendario
+        except ImportError:
+            from calendario import BotonCalendario
 
-        self.entry_dia = ttk.Entry(frame_fecha, width=4)
-        self.entry_dia.pack(side=tk.LEFT, padx=2)
-        ttk.Label(frame_fecha, text="/").pack(side=tk.LEFT)
-
-        self.entry_mes = ttk.Entry(frame_fecha, width=4)
-        self.entry_mes.insert(0, str(self.mes))
-        self.entry_mes.pack(side=tk.LEFT, padx=2)
-        ttk.Label(frame_fecha, text="/").pack(side=tk.LEFT)
-
-        self.entry_anio = ttk.Entry(frame_fecha, width=6)
-        self.entry_anio.insert(0, str(self.anio))
-        self.entry_anio.pack(side=tk.LEFT, padx=2)
-
-        # Establecer día actual
-        self.entry_dia.insert(0, str(datetime.now().day))
+        # Widget de calendario para gastos
+        fecha_actual = f"{self.anio:04d}-{self.mes:02d}-{datetime.now().day:02d}"
+        self.fecha_gasto = BotonCalendario(
+            frame_formulario,
+            fecha_inicial=fecha_actual,
+            bg='#f8f9fa'
+        )
+        self.fecha_gasto.grid(row=2, column=1, columnspan=1, sticky=tk.W, padx=5, pady=5)
 
         # Método de pago
         ttk.Label(frame_formulario, text="Método:").grid(
@@ -273,24 +268,20 @@ class VistaGastosMensual:
             row=2, column=0, sticky=tk.W, padx=5, pady=5
         )
 
-        frame_fecha = ttk.Frame(frame_formulario)
-        frame_fecha.grid(row=2, column=1, columnspan=2, sticky=tk.W, padx=5, pady=5)
+        # Importar el componente de calendario
+        try:
+            from .calendario import BotonCalendario
+        except ImportError:
+            from calendario import BotonCalendario
 
-        self.entry_dia_ingreso = ttk.Entry(frame_fecha, width=4)
-        self.entry_dia_ingreso.pack(side=tk.LEFT, padx=2)
-        ttk.Label(frame_fecha, text="/").pack(side=tk.LEFT)
-
-        self.entry_mes_ingreso = ttk.Entry(frame_fecha, width=4)
-        self.entry_mes_ingreso.insert(0, str(self.mes))
-        self.entry_mes_ingreso.pack(side=tk.LEFT, padx=2)
-        ttk.Label(frame_fecha, text="/").pack(side=tk.LEFT)
-
-        self.entry_anio_ingreso = ttk.Entry(frame_fecha, width=6)
-        self.entry_anio_ingreso.insert(0, str(self.anio))
-        self.entry_anio_ingreso.pack(side=tk.LEFT, padx=2)
-
-        # Establecer día actual
-        self.entry_dia_ingreso.insert(0, str(datetime.now().day))
+        # Widget de calendario para ingresos
+        fecha_actual = f"{self.anio:04d}-{self.mes:02d}-{datetime.now().day:02d}"
+        self.fecha_ingreso = BotonCalendario(
+            frame_formulario,
+            fecha_inicial=fecha_actual,
+            bg='#f8f9fa'
+        )
+        self.fecha_ingreso.grid(row=2, column=1, columnspan=2, sticky=tk.W, padx=5, pady=5)
 
         # Botón agregar
         btn_agregar = ttk.Button(
@@ -403,9 +394,10 @@ class VistaGastosMensual:
 
         # Construir fecha
         try:
-            dia = int(self.entry_dia.get())
-            mes = int(self.entry_mes.get())
-            anio = int(self.entry_anio.get())
+            valores_fecha = self.fecha_gasto.obtener_valores()
+            dia = int(valores_fecha['dia'])
+            mes = int(valores_fecha['mes'])
+            anio = int(valores_fecha['anio'])
             fecha = f"{anio:04d}-{mes:02d}-{dia:02d}"
             # Validar fecha
             datetime.strptime(fecha, "%Y-%m-%d")
@@ -420,9 +412,12 @@ class VistaGastosMensual:
             # Limpiar campos
             self.entry_descripcion.delete(0, tk.END)
             self.entry_cantidad.delete(0, tk.END)
-            self.entry_dia.delete(0, tk.END)
-            self.entry_dia.insert(0, str(datetime.now().day))
-            self.combo_metodo_pago.current(1)  # Resetear a tarjeta
+
+            # Resetear fecha a hoy
+            fecha_hoy = datetime.now()
+            self.fecha_gasto.establecer_valores(fecha_hoy.day, fecha_hoy.month, fecha_hoy.year)
+            self.combo_metodo_pago.current(1)  # Tarjeta por defecto
+
 
             # Recargar gastos
             self.cargar_gastos()
@@ -458,9 +453,10 @@ class VistaGastosMensual:
 
         # Construir fecha
         try:
-            dia = int(self.entry_dia_ingreso.get())
-            mes = int(self.entry_mes_ingreso.get())
-            anio = int(self.entry_anio_ingreso.get())
+            valores_fecha = self.fecha_ingreso.obtener_valores()
+            dia = int(valores_fecha['dia'])
+            mes = int(valores_fecha['mes'])
+            anio = int(valores_fecha['anio'])
             fecha = f"{anio:04d}-{mes:02d}-{dia:02d}"
             # Validar fecha
             datetime.strptime(fecha, "%Y-%m-%d")
@@ -475,8 +471,9 @@ class VistaGastosMensual:
             # Limpiar campos
             self.entry_descripcion_ingreso.delete(0, tk.END)
             self.entry_cantidad_ingreso.delete(0, tk.END)
-            self.entry_dia_ingreso.delete(0, tk.END)
-            self.entry_dia_ingreso.insert(0, str(datetime.now().day))
+            # Resetear fecha a hoy
+            fecha_hoy = datetime.now()
+            self.fecha_ingreso.establecer_valores(fecha_hoy.day, fecha_hoy.month, fecha_hoy.year)
 
             # Recargar ingresos
             self.cargar_ingresos()
@@ -689,14 +686,22 @@ class VistaGastosMensual:
                 break
 
         # Fecha
-        tk.Label(form, text="Fecha (YYYY-MM-DD):", font=('SF Pro Display', 10),
+        tk.Label(form, text="Fecha:", font=('SF Pro Display', 10),
                 bg=COLORES['fondo_tarjeta'], fg=COLORES['texto_secundario']).grid(
             row=3, column=0, sticky=tk.W, pady=5)
 
-        entry_fecha = tk.Entry(form, font=('SF Pro Display', 10), width=30,
-                              bg=COLORES['fondo_input'], fg=COLORES['texto_primario'])
-        entry_fecha.grid(row=3, column=1, pady=5, sticky=tk.EW)
-        entry_fecha.insert(0, fecha)
+        # Widget de calendario para editar gasto
+        try:
+            from .calendario import BotonCalendario
+        except ImportError:
+            from calendario import BotonCalendario
+
+        fecha_calendario_gasto = BotonCalendario(
+            form,
+            fecha_inicial=fecha,
+            bg=COLORES['fondo_tarjeta']
+        )
+        fecha_calendario_gasto.grid(row=3, column=1, pady=5, sticky=tk.W)
 
         # Método de pago
         tk.Label(form, text="Método de Pago:", font=('SF Pro Display', 10),
@@ -725,18 +730,18 @@ class VistaGastosMensual:
             nueva_desc = entry_desc.get().strip()
             nueva_cant_str = entry_cant.get().strip()
             nueva_cat = combo_cat.get()
-            nueva_fecha = entry_fecha.get().strip()
+            nueva_fecha = fecha_calendario_gasto.obtener_fecha()
 
             if not nueva_desc or not nueva_cant_str or not nueva_cat:
                 messagebox.showerror("Error", "Todos los campos son obligatorios")
+                messagebox.showerror("Error", "La cantidad debe ser un número positivo")
                 return
 
+            # Validar fecha
             try:
-                nueva_cant = float(nueva_cant_str)
-                if nueva_cant <= 0:
-                    raise ValueError()
+                datetime.strptime(nueva_fecha, "%Y-%m-%d")
             except ValueError:
-                messagebox.showerror("Error", "La cantidad debe ser un número positivo")
+                messagebox.showerror("Error", "Fecha inválida")
                 return
 
             # Obtener ID de categoría
@@ -850,14 +855,22 @@ class VistaGastosMensual:
         entry_fuente.insert(0, fuente)
 
         # Fecha
-        tk.Label(form, text="Fecha (YYYY-MM-DD):", font=('SF Pro Display', 10),
+        tk.Label(form, text="Fecha:", font=('SF Pro Display', 10),
                 bg=COLORES['fondo_tarjeta'], fg=COLORES['texto_secundario']).grid(
             row=3, column=0, sticky=tk.W, pady=5)
 
-        entry_fecha = tk.Entry(form, font=('SF Pro Display', 10), width=30,
-                              bg=COLORES['fondo_input'], fg=COLORES['texto_primario'])
-        entry_fecha.grid(row=3, column=1, pady=5, sticky=tk.EW)
-        entry_fecha.insert(0, fecha)
+        # Widget de calendario para editar ingreso
+        try:
+            from .calendario import BotonCalendario
+        except ImportError:
+            from calendario import BotonCalendario
+
+        fecha_calendario_ingreso = BotonCalendario(
+            form,
+            fecha_inicial=fecha,
+            bg=COLORES['fondo_tarjeta']
+        )
+        fecha_calendario_ingreso.grid(row=3, column=1, pady=5, sticky=tk.W)
 
         form.columnconfigure(1, weight=1)
 
@@ -875,7 +888,7 @@ class VistaGastosMensual:
             nueva_desc = entry_desc.get().strip()
             nueva_cant_str = entry_cant.get().strip()
             nueva_fuente = entry_fuente.get()
-            nueva_fecha = entry_fecha.get().strip()
+            nueva_fecha = fecha_calendario_ingreso.obtener_fecha()
 
             if not nueva_desc or not nueva_cant_str or not nueva_fuente:
                 messagebox.showerror("Error", "Todos los campos son obligatorios")
@@ -887,6 +900,13 @@ class VistaGastosMensual:
                     raise ValueError()
             except ValueError:
                 messagebox.showerror("Error", "La cantidad debe ser un número positivo")
+                return
+
+            # Validar fecha
+            try:
+                datetime.strptime(nueva_fecha, "%Y-%m-%d")
+            except ValueError:
+                messagebox.showerror("Error", "Fecha inválida")
                 return
 
             # Actualizar en la base de datos
@@ -911,11 +931,15 @@ class VistaGastosMensual:
         Args:
             nuevo_anio: Nuevo año
         """
-        self.anio = nuevo_anio
-        self.entry_anio.delete(0, tk.END)
-        self.entry_anio.insert(0, str(nuevo_anio))
-        self.entry_anio_ingreso.delete(0, tk.END)
-        self.entry_anio_ingreso.insert(0, str(nuevo_anio))
+        # Actualizar componentes de calendario para gastos
+        if hasattr(self, 'fecha_gasto'):
+            valores_gasto = self.fecha_gasto.obtener_valores()
+            self.fecha_gasto.establecer_valores(valores_gasto['dia'], valores_gasto['mes'], nuevo_anio)
+
+        # Actualizar componentes de calendario para ingresos
+        if hasattr(self, 'fecha_ingreso'):
+            valores_ingreso = self.fecha_ingreso.obtener_valores()
+            self.fecha_ingreso.establecer_valores(valores_ingreso['dia'], valores_ingreso['mes'], nuevo_anio)
         self.cargar_gastos()
         self.cargar_ingresos()
 

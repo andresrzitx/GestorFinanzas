@@ -27,7 +27,7 @@ def iniciar_aplicacion(usuario_id: int, nombre_usuario: str, rol: str = 'usuario
         rol: Rol del usuario (por defecto 'usuario')
     """
     root = tk.Tk()
-    app = AplicacionGastos(root, usuario_id, nombre_usuario)
+    app = AplicacionGastos(root, usuario_id, nombre_usuario, rol)
     root.mainloop()
 
 
