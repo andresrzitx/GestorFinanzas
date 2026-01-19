@@ -1771,6 +1771,10 @@ class VistaGestionCategorias:
 
         conn.close()
 
+    def refrescar(self):
+        """Refresca los datos de la vista."""
+        self.cargar_categorias()
+
     def ventana_nueva_categoria(self):
         """Abre una ventana para agregar una nueva categoría."""
         ventana = tk.Toplevel(self.frame.winfo_toplevel())

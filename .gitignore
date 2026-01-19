@@ -36,7 +36,6 @@ backup/
 Thumbs.db
 
 # Temporal files
-test.txt
 *.tmp
 *.log
 

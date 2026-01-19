@@ -8,6 +8,12 @@ import os
 from datetime import datetime
 from typing import List, Tuple, Dict, Optional
 
+# Importar modelos POO
+try:
+    from .models import Usuario, Gasto, Categoria, Ingreso, GrupoGasto
+except ImportError:
+    from models import Usuario, Gasto, Categoria, Ingreso, GrupoGasto
+
 
 # Obtener el directorio raíz del proyecto
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1338,3 +1344,184 @@ class Database:
             conn.close()
         except Exception as e:
             print(f"Error al actualizar último acceso: {e}")
+
+    # ===================================================================
+    # MÉTODOS QUE RETORNAN OBJETOS DE MODELO POO
+    # ===================================================================
+
+    def obtener_gastos_como_objetos(self, mes: int = None, anio: int = None) -> List[Gasto]:
+        """
+        Obtiene gastos como objetos de la clase Gasto.
+
+        Args:
+            mes: Mes (opcional)
+            anio: Año (opcional)
+
+        Returns:
+            Lista de objetos Gasto
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        if mes and anio:
+            query = 'SELECT id, descripcion, cantidad, categoria_id, fecha, metodo_pago FROM gastos WHERE mes = ? AND anio = ? ORDER BY fecha DESC'
+            cursor.execute(query, (mes, anio))
+        elif anio:
+            query = 'SELECT id, descripcion, cantidad, categoria_id, fecha, metodo_pago FROM gastos WHERE anio = ? ORDER BY fecha DESC'
+            cursor.execute(query, (anio,))
+        else:
+            query = 'SELECT id, descripcion, cantidad, categoria_id, fecha, metodo_pago FROM gastos ORDER BY fecha DESC'
+            cursor.execute(query)
+
+        resultados = cursor.fetchall()
+        conn.close()
+
+        # Convertir tuplas a objetos Gasto
+        gastos = []
+        for row in resultados:
+            gasto = Gasto(
+                id=row[0],
+                descripcion=row[1],
+                cantidad=row[2],
+                categoria_id=row[3],
+                fecha=row[4],
+                metodo_pago=row[5]
+            )
+            gastos.append(gasto)
+
+        return gastos
+
+    def obtener_categorias_como_objetos(self) -> List[Categoria]:
+        """
+        Obtiene todas las categorías como objetos de la clase Categoria.
+
+        Returns:
+            Lista de objetos Categoria
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT id, nombre, descripcion FROM categorias ORDER BY nombre')
+        resultados = cursor.fetchall()
+        conn.close()
+
+        categorias = []
+        for row in resultados:
+            categoria = Categoria(
+                id=row[0],
+                nombre=row[1],
+                descripcion=row[2] if row[2] else ""
+            )
+            categorias.append(categoria)
+
+        return categorias
+
+    def obtener_ingresos_como_objetos(self, mes: int = None, anio: int = None) -> List[Ingreso]:
+        """
+        Obtiene ingresos como objetos de la clase Ingreso.
+
+        Args:
+            mes: Mes (opcional)
+            anio: Año (opcional)
+
+        Returns:
+            Lista de objetos Ingreso
+        """
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        if mes and anio:
+            query = 'SELECT id, descripcion, cantidad, fecha FROM ingresos WHERE mes = ? AND anio = ? ORDER BY fecha DESC'
+            cursor.execute(query, (mes, anio))
+        elif anio:
+            query = 'SELECT id, descripcion, cantidad, fecha FROM ingresos WHERE anio = ? ORDER BY fecha DESC'
+            cursor.execute(query, (anio,))
+        else:
+            query = 'SELECT id, descripcion, cantidad, fecha FROM ingresos ORDER BY fecha DESC'
+            cursor.execute(query)
+
+        resultados = cursor.fetchall()
+        conn.close()
+
+        ingresos = []
+        for row in resultados:
+            ingreso = Ingreso(
+                id=row[0],
+                descripcion=row[1],
+                cantidad=row[2],
+                fecha=row[3]
+            )
+            ingresos.append(ingreso)
+
+        return ingresos
+
+    def obtener_usuario_como_objeto(self, usuario_id: int) -> Optional[Usuario]:
+        """
+        Obtiene un usuario como objeto de la clase Usuario.
+
+        Args:
+            usuario_id: ID del usuario
+
+        Returns:
+            Objeto Usuario o None si no existe
+        """
+        conn = self.get_usuarios_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT id, nombre, email, rol, activo, fecha_registro, ultimo_acceso
+            FROM usuarios
+            WHERE id = ?
+        ''', (usuario_id,))
+
+        resultado = cursor.fetchone()
+        conn.close()
+
+        if resultado:
+            usuario = Usuario(
+                id=resultado[0],
+                nombre=resultado[1],
+                email=resultado[2],
+                rol=resultado[3],
+                activo=bool(resultado[4]),
+                fecha_registro=datetime.fromisoformat(resultado[5]) if resultado[5] else None,
+                ultimo_acceso=datetime.fromisoformat(resultado[6]) if resultado[6] else None
+            )
+            return usuario
+
+        return None
+
+    def obtener_todos_usuarios_como_objetos(self) -> List[Usuario]:
+        """
+        Obtiene todos los usuarios como objetos de la clase Usuario.
+
+        Returns:
+            Lista de objetos Usuario
+        """
+        conn = self.get_usuarios_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT id, nombre, email, rol, activo, fecha_registro, ultimo_acceso
+            FROM usuarios
+            ORDER BY nombre
+        ''')
+
+        resultados = cursor.fetchall()
+        conn.close()
+
+        usuarios = []
+        for row in resultados:
+            usuario = Usuario(
+                id=row[0],
+                nombre=row[1],
+                email=row[2],
+                rol=row[3],
+                activo=bool(row[4]),
+                fecha_registro=datetime.fromisoformat(row[5]) if row[5] else None,
+                ultimo_acceso=datetime.fromisoformat(row[6]) if row[6] else None
+            )
+            usuarios.append(usuario)
+
+        return usuarios
+
