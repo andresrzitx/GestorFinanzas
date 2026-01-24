@@ -1,111 +1,182 @@
 """
-Test de funcionalidad de gestión de categorías
+Tests unitarios para gestión de categorías.
+
+Verifica las operaciones CRUD (Create, Read, Update, Delete) de categorías.
 """
+
+import unittest
 import sys
 import os
 
-# Agregar el directorio src al path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+# Agregar el directorio raíz al path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database import Database
+from src.database import Database
 
-def test_gestion_categorias():
-    """Prueba las operaciones CRUD de categorías."""
-    print("\n" + "="*80)
-    print("  TEST: GESTIÓN DE CATEGORÍAS")
-    print("="*80 + "\n")
 
-    # Crear una base de datos temporal para pruebas
-    db = Database(usuario_id=999)  # Usuario de prueba
+class TestGestionCategorias(unittest.TestCase):
+    """Tests para gestión de categorías."""
 
-    print("✅ Base de datos de prueba creada\n")
+    def setUp(self):
+        """Configurar el entorno de prueba antes de cada test."""
+        # Usar usuario de prueba especial
+        self.db = Database(usuario_id=999)
+        self.test_categoria_nombre = "Test Categoría"
+        self.test_categoria_desc = "Categoría para pruebas"
 
-    # 1. LISTAR CATEGORÍAS INICIALES
-    print("1️⃣  LISTANDO CATEGORÍAS POR DEFECTO:")
-    print("-" * 80)
-    categorias = db.obtener_categorias()
-    for cat_id, nombre, descripcion in categorias:
-        print(f"   ID: {cat_id:2d} | {nombre:20s} | {descripcion}")
-    print(f"\n   Total: {len(categorias)} categorías\n")
+    def test_listar_categorias_por_defecto(self):
+        """Test: Listar categorías por defecto."""
+        categorias = self.db.obtener_categorias()
 
-    # 2. AGREGAR NUEVA CATEGORÍA
-    print("2️⃣  AGREGANDO NUEVA CATEGORÍA:")
-    print("-" * 80)
-    if db.agregar_categoria("Mascotas", "Gastos relacionados con mascotas"):
-        print("   ✅ Categoría 'Mascotas' agregada correctamente")
-    else:
-        print("   ❌ Error al agregar categoría")
+        self.assertIsInstance(categorias, list)
+        self.assertGreater(len(categorias), 0, "Debe haber categorías por defecto")
 
-    # Intentar agregar duplicada
-    if not db.agregar_categoria("Mascotas", "Descripción diferente"):
-        print("   ✅ Validación correcta: no permite duplicados")
-    else:
-        print("   ❌ Error: permitió duplicado")
-    print()
+        # Verificar estructura
+        for cat in categorias:
+            self.assertEqual(len(cat), 3)  # id, nombre, descripcion
+            cat_id, nombre, descripcion = cat
+            self.assertIsInstance(cat_id, int)
+            self.assertIsInstance(nombre, str)
 
-    # 3. EDITAR CATEGORÍA
-    print("3️⃣  EDITANDO CATEGORÍA:")
-    print("-" * 80)
-    categorias = db.obtener_categorias()
-    mascotas_id = None
-    for cat_id, nombre, _ in categorias:
-        if nombre == "Mascotas":
-            mascotas_id = cat_id
-            break
+    def test_agregar_categoria_nueva(self):
+        """Test: Agregar una nueva categoría."""
+        exito = self.db.agregar_categoria(
+            self.test_categoria_nombre,
+            self.test_categoria_desc
+        )
 
-    if mascotas_id:
-        if db.editar_categoria(mascotas_id, "Mascotas y Veterinaria", "Gastos de mascotas y veterinario"):
-            print("   ✅ Categoría editada correctamente")
-            # Verificar cambio
-            categorias = db.obtener_categorias()
-            for cat_id, nombre, desc in categorias:
-                if cat_id == mascotas_id:
-                    print(f"   📝 Nueva info: {nombre} - {desc}")
-        else:
-            print("   ❌ Error al editar categoría")
-    print()
+        self.assertTrue(exito, "Debe poder agregar categoría nueva")
 
-    # 4. INTENTAR ELIMINAR CATEGORÍA CON GASTOS
-    print("4️⃣  INTENTANDO ELIMINAR CATEGORÍA CON GASTOS:")
-    print("-" * 80)
-    # Primero agregar un gasto a la categoría "Alimentación" (ID 1)
-    db.agregar_gasto("Gasto de prueba", 10.0, 1, "2025-01-15")
-    if not db.eliminar_categoria(1):
-        print("   ✅ Validación correcta: no permite eliminar categoría con gastos")
-    else:
-        print("   ❌ Error: permitió eliminar categoría con gastos")
-    print()
+        # Verificar que se agregó
+        categorias = self.db.obtener_categorias()
+        nombres = [cat[1] for cat in categorias]
+        self.assertIn(self.test_categoria_nombre, nombres)
 
-    # 5. ELIMINAR CATEGORÍA SIN GASTOS
-    print("5️⃣  ELIMINANDO CATEGORÍA SIN GASTOS:")
-    print("-" * 80)
-    if mascotas_id and db.eliminar_categoria(mascotas_id):
-        print("   ✅ Categoría eliminada correctamente")
-    else:
-        print("   ❌ Error al eliminar categoría")
-    print()
+    def test_no_permitir_categoria_duplicada(self):
+        """Test: No permitir agregar categoría con nombre duplicado."""
+        # Agregar la primera vez
+        self.db.agregar_categoria(self.test_categoria_nombre, self.test_categoria_desc)
 
-    # 6. LISTAR CATEGORÍAS FINALES
-    print("6️⃣  LISTANDO CATEGORÍAS FINALES:")
-    print("-" * 80)
-    categorias = db.obtener_categorias()
-    for cat_id, nombre, descripcion in categorias:
-        print(f"   ID: {cat_id:2d} | {nombre:20s} | {descripcion}")
-    print(f"\n   Total: {len(categorias)} categorías\n")
+        # Intentar agregar de nuevo
+        exito = self.db.agregar_categoria(self.test_categoria_nombre, "Otra descripción")
 
-    print("="*80)
-    print("  ✅ TODOS LOS TESTS COMPLETADOS")
-    print("="*80 + "\n")
+        self.assertFalse(exito, "No debe permitir categorías duplicadas")
 
-    # Limpiar: eliminar la base de datos de prueba
-    try:
-        db_path = f"data/usuarios/usuario_999_finanzas.db"
-        if os.path.exists(db_path):
-            os.remove(db_path)
-            print("🧹 Base de datos de prueba eliminada\n")
-    except Exception as e:
-        print(f"⚠️  No se pudo eliminar DB de prueba: {e}\n")
+    def test_editar_categoria(self):
+        """Test: Editar una categoría existente."""
+        # Primero agregar
+        self.db.agregar_categoria(self.test_categoria_nombre, self.test_categoria_desc)
 
-if __name__ == "__main__":
-    test_gestion_categorias()
+        # Obtener ID
+        categorias = self.db.obtener_categorias()
+        cat_id = None
+        for c_id, nombre, _ in categorias:
+            if nombre == self.test_categoria_nombre:
+                cat_id = c_id
+                break
 
+        self.assertIsNotNone(cat_id, "La categoría debe existir")
+
+        # Editar
+        nuevo_nombre = "Test Categoría Editada"
+        nueva_desc = "Descripción editada"
+        exito = self.db.editar_categoria(cat_id, nuevo_nombre, nueva_desc)
+
+        self.assertTrue(exito, "Debe poder editar categoría")
+
+        # Verificar cambios
+        categorias = self.db.obtener_categorias()
+        encontrada = False
+        for c_id, nombre, desc in categorias:
+            if c_id == cat_id:
+                self.assertEqual(nombre, nuevo_nombre)
+                self.assertEqual(desc, nueva_desc)
+                encontrada = True
+                break
+
+        self.assertTrue(encontrada, "Categoría editada debe existir")
+
+    def test_no_eliminar_categoria_con_gastos(self):
+        """Test: No permitir eliminar categoría con gastos asociados."""
+        # Usar categoría "Alimentación" (ID 1) que tiene gastos por defecto
+        categorias = self.db.obtener_categorias()
+        if len(categorias) > 0:
+            cat_id = categorias[0][0]
+
+            # Asegurar que tiene un gasto
+            self.db.agregar_gasto("Gasto de prueba", 10.0, cat_id, "2026-01-24")
+
+            # Intentar eliminar
+            exito = self.db.eliminar_categoria(cat_id)
+
+            self.assertFalse(exito, "No debe poder eliminar categoría con gastos")
+
+    def test_eliminar_categoria_sin_gastos(self):
+        """Test: Eliminar categoría sin gastos asociados."""
+        # Agregar categoría nueva (sin gastos)
+        nombre_unico = "Categoría Para Eliminar Test"
+        self.db.agregar_categoria(nombre_unico, "Test")
+
+        # Obtener ID
+        categorias = self.db.obtener_categorias()
+        cat_id = None
+        for c_id, nombre, _ in categorias:
+            if nombre == nombre_unico:
+                cat_id = c_id
+                break
+
+        self.assertIsNotNone(cat_id)
+
+        # Eliminar
+        exito = self.db.eliminar_categoria(cat_id)
+
+        self.assertTrue(exito, "Debe poder eliminar categoría sin gastos")
+
+        # Verificar que ya no existe
+        categorias = self.db.obtener_categorias()
+        nombres = [cat[1] for cat in categorias]
+        self.assertNotIn(nombre_unico, nombres)
+
+    def test_obtener_categoria_por_id(self):
+        """Test: Obtener detalles de una categoría específica."""
+        categorias = self.db.obtener_categorias()
+        if len(categorias) > 0:
+            cat_id = categorias[0][0]
+            nombre_esperado = categorias[0][1]
+
+            # Buscar por ID
+            categoria = None
+            for c_id, nombre, desc in categorias:
+                if c_id == cat_id:
+                    categoria = (c_id, nombre, desc)
+                    break
+
+            self.assertIsNotNone(categoria)
+            self.assertEqual(categoria[0], cat_id)
+            self.assertEqual(categoria[1], nombre_esperado)
+
+    def tearDown(self):
+        """Limpiar después de cada test."""
+        # Eliminar la base de datos de prueba
+        try:
+            db_path = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "data", "usuarios", "usuario_999_finanzas.db"
+            )
+            if os.path.exists(db_path):
+                os.remove(db_path)
+        except:
+            pass
+
+
+def suite():
+    """Crear suite de tests."""
+    loader = unittest.TestLoader()
+    test_suite = unittest.TestSuite()
+    test_suite.addTests(loader.loadTestsFromTestCase(TestGestionCategorias))
+    return test_suite
+
+
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(suite())

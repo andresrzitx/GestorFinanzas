@@ -9,12 +9,11 @@ y bases de datos separadas por usuario.
 import sys
 import os
 
-# Agregar el directorio src al path para importaciones
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Agregar el directorio raíz al path para importaciones
+sys.path.insert(0, os.path.dirname(__file__))
 
 import tkinter as tk
-from src.login import VentanaLogin
-from src.app import AplicacionGastos
+from src import VentanaLogin, AplicacionGastos
 
 
 def iniciar_aplicacion(usuario_id: int, nombre_usuario: str, rol: str = 'usuario'):

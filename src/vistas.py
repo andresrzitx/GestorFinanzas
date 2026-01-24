@@ -734,6 +734,14 @@ class VistaGastosMensual:
 
             if not nueva_desc or not nueva_cant_str or not nueva_cat:
                 messagebox.showerror("Error", "Todos los campos son obligatorios")
+                return
+
+            # Validar cantidad
+            try:
+                nueva_cant = float(nueva_cant_str)
+                if nueva_cant <= 0:
+                    raise ValueError()
+            except ValueError:
                 messagebox.showerror("Error", "La cantidad debe ser un número positivo")
                 return
 
@@ -931,6 +939,9 @@ class VistaGastosMensual:
         Args:
             nuevo_anio: Nuevo año
         """
+        # ¡IMPORTANTE! Actualizar el año de la vista
+        self.anio = nuevo_anio
+
         # Actualizar componentes de calendario para gastos
         if hasattr(self, 'fecha_gasto'):
             valores_gasto = self.fecha_gasto.obtener_valores()
@@ -940,6 +951,8 @@ class VistaGastosMensual:
         if hasattr(self, 'fecha_ingreso'):
             valores_ingreso = self.fecha_ingreso.obtener_valores()
             self.fecha_ingreso.establecer_valores(valores_ingreso['dia'], valores_ingreso['mes'], nuevo_anio)
+
+        # Recargar gastos e ingresos del nuevo año
         self.cargar_gastos()
         self.cargar_ingresos()
 

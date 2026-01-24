@@ -3,10 +3,17 @@
 Script de prueba para verificar la vista de comparación anual mejorada
 """
 
-from database import Database
+import sys
+import os
+
+# Agregar el directorio raíz al path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.database import Database
 
 def test_comparacion_anual():
-    db = Database()
+    # Usar usuario_id=1 para pruebas (asumiendo que existe en la BD)
+    db = Database(usuario_id=2)
 
     print('═' * 80)
     print('📊 VISTA DE COMPARACIÓN ANUAL - Test de Funcionalidad')

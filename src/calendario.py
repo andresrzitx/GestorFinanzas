@@ -1,5 +1,5 @@
 """
-Componente de calendario para seleccionar fechas en la aplicación de finanzas.
+Componente de calendario para seleccionar fechas.
 """
 
 import tkinter as tk
@@ -15,12 +15,11 @@ except ImportError:
 
 
 class CalendarioWidget(tk.Toplevel):
-    """Widget de calendario con diseño moderno y elegante."""
+    """Widget de calendario."""
 
     def __init__(self, parent, callback: Callable[[str], None], fecha_inicial: Optional[str] = None):
         """
-        Inicializa el calendario con diseño mejorado.
-
+        Inicializa el calendario.
         Args:
             parent: Ventana padre
             callback: Función que se ejecuta cuando se selecciona una fecha
@@ -69,7 +68,6 @@ class CalendarioWidget(tk.Toplevel):
     def aplicar_estilos(self):
         """Aplica estilos modernos a la ventana."""
         try:
-            # Sombra y bordes redondeados en macOS
             if hasattr(self, 'tk'):
                 self.attributes('-titlebar', False)
         except:
@@ -717,6 +715,10 @@ class BotonCalendario(tk.Frame):
 
     def establecer_valores(self, dia, mes, anio):
         """Establece los valores de día, mes y año."""
-        self.dia_var.set(f"{dia:02d}")
-        self.mes_var.set(f"{mes:02d}")
+        # Convertir a enteros si son strings
+        dia_int = int(dia) if isinstance(dia, str) else dia
+        mes_int = int(mes) if isinstance(mes, str) else mes
+
+        self.dia_var.set(f"{dia_int:02d}")
+        self.mes_var.set(f"{mes_int:02d}")
         self.anio_var.set(str(anio))

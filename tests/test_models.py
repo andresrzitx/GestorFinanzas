@@ -10,10 +10,10 @@ from datetime import datetime
 import sys
 import os
 
-# Agregar el directorio src al path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+# Agregar el directorio raíz al path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from models import Usuario, Categoria, Gasto, Ingreso, GrupoGasto
+from src.models import Usuario, Categoria, Gasto, Ingreso, GrupoGasto
 
 
 class TestUsuario(unittest.TestCase):
@@ -302,12 +302,16 @@ def suite():
     Returns:
         unittest.TestSuite: Suite con todos los tests
     """
+    loader = unittest.TestLoader()
     test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.makeSuite(TestUsuario))
-    test_suite.addTest(unittest.makeSuite(TestCategoria))
-    test_suite.addTest(unittest.makeSuite(TestGasto))
-    test_suite.addTest(unittest.makeSuite(TestIngreso))
-    test_suite.addTest(unittest.makeSuite(TestGrupoGasto))
+
+    # Usar TestLoader en lugar de makeSuite (deprecado)
+    test_suite.addTests(loader.loadTestsFromTestCase(TestUsuario))
+    test_suite.addTests(loader.loadTestsFromTestCase(TestCategoria))
+    test_suite.addTests(loader.loadTestsFromTestCase(TestGasto))
+    test_suite.addTests(loader.loadTestsFromTestCase(TestIngreso))
+    test_suite.addTests(loader.loadTestsFromTestCase(TestGrupoGasto))
+
     return test_suite
 
 

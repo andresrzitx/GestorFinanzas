@@ -1,7 +1,3 @@
-"""
-Aplicación principal de gestión de gastos mensuales.
-"""
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
@@ -22,7 +18,6 @@ class AplicacionGastos:
     def __init__(self, root, usuario_id, nombre_usuario, rol='usuario'):
         """
         Inicializa la aplicación.
-
         Args:
             root: Ventana principal de Tkinter
             usuario_id: ID del usuario autenticado
@@ -73,7 +68,7 @@ class AplicacionGastos:
         self.root.geometry(f'{width}x{height}+{x}+{y}')
 
     def configurar_estilos(self):
-        """Configura los estilos de la aplicación con un tema elegante y minimalista."""
+        """Configurar los estilos de la aplicación."""
         try:
             from .estilos import configurar_estilo_ttk
             configurar_estilo_ttk()
@@ -82,12 +77,12 @@ class AplicacionGastos:
             configurar_estilo_ttk()
 
     def crear_interfaz(self):
-        """Crea la interfaz principal de la aplicación con diseño moderno."""
-        # Frame principal con fondo elegante
+        """Crea la interfaz principal de la aplicación."""
+        # Frame principal
         main_container = tk.Frame(self.root, bg='#F7FAFC')
         main_container.pack(fill=tk.BOTH, expand=True)
 
-        # Header minimalista
+        # Header
         header = tk.Frame(main_container, bg='#FFFFFF', height=100)
         header.pack(fill=tk.X, padx=0, pady=0)
         header.pack_propagate(False)
@@ -96,7 +91,7 @@ class AplicacionGastos:
         header_content = tk.Frame(header, bg='#FFFFFF')
         header_content.pack(fill=tk.BOTH, expand=True, padx=30, pady=20)
 
-        # Título principal minimalista
+        # Título principal
         title_frame = tk.Frame(header_content, bg='#FFFFFF')
         title_frame.pack(side=tk.LEFT)
 
@@ -122,7 +117,7 @@ class AplicacionGastos:
         controls_frame = tk.Frame(header_content, bg='#FFFFFF')
         controls_frame.pack(side=tk.RIGHT, padx=10)
 
-        # Selector de año con estilo elegante
+        # Selector de año
         year_frame = tk.Frame(controls_frame, bg='#FFFFFF', relief='flat')
         year_frame.pack(side=tk.LEFT, padx=10)
 
@@ -145,7 +140,7 @@ class AplicacionGastos:
         self.combo_anio.pack(side=tk.LEFT, padx=(0, 10), pady=8)
         self.combo_anio.bind('<<ComboboxSelected>>', self.cambiar_anio)
 
-        # Botón refrescar con estilo elegante
+        # Botón refrescar
         try:
             from .estilos import crear_boton_moderno
         except ImportError:
@@ -167,7 +162,7 @@ class AplicacionGastos:
         self.notebook = ttk.Notebook(content_frame)
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
-        # Crear pestañas para cada mes sin iconos (minimalista)
+        # Crear pestañas para cada mes
         self.vistas_mensuales = {}
         meses = [
             "Enero", "Febrero", "Marzo", "Abril",
@@ -207,7 +202,7 @@ class AplicacionGastos:
             )
             self.notebook.add(self.vista_administracion.frame, text="👨‍💼 Administración")
 
-        # Barra de estado elegante
+        # Barra de estado
         footer = tk.Frame(main_container, bg='#EDF2F7', height=35)
         footer.pack(fill=tk.X, side=tk.BOTTOM)
         footer.pack_propagate(False)
@@ -274,34 +269,15 @@ class AplicacionGastos:
             self.root.destroy()
 
             # Crear nueva ventana para login
+            # Nota: La función iniciar_aplicacion debe ser importada desde main
             nueva_ventana = tk.Tk()
+
+            # Importar dinámicamente para evitar dependencias circulares
+            import sys
+            import os
+            sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+            from main import iniciar_aplicacion
+
             VentanaLogin(nueva_ventana, iniciar_aplicacion)
             nueva_ventana.mainloop()
-
-
-def iniciar_aplicacion(usuario_id, nombre_usuario, rol='usuario'):
-    """
-    Inicia la aplicación principal después del login exitoso.
-
-    Args:
-        usuario_id: ID del usuario autenticado
-        nombre_usuario: Nombre del usuario
-        rol: Rol del usuario ('usuario' o 'admin')
-    """
-
-    # Crear ventana principal de la aplicación
-    root = tk.Tk()
-    app = AplicacionGastos(root, usuario_id, nombre_usuario, rol)
-    root.mainloop()
-
-
-def main():
-    """Función principal para ejecutar la aplicación."""
-    root = tk.Tk()
-    VentanaLogin(root, iniciar_aplicacion)
-    root.mainloop()
-
-
-if __name__ == "__main__":
-    main()
 
