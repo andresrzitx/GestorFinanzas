@@ -3,12 +3,32 @@ Script para agregar datos de ejemplo a la base de datos.
 Ejecuta este archivo para poblar la base de datos con gastos de ejemplo.
 """
 
-from database import Database
+import sys
+import os
+
+# Agregar el directorio raíz al path para poder importar desde src
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.database import Database
 
 
 def agregar_datos_ejemplo():
     """Agrega datos de ejemplo a la base de datos."""
-    db = Database()
+
+    print("="*60)
+    print("  AGREGAR DATOS DE EJEMPLO")
+    print("="*60)
+
+    # Solicitar ID de usuario
+    try:
+        usuario_id = int(input("Ingresa el ID del usuario (por defecto 1): ") or "1")
+    except ValueError:
+        print("❌ ID inválido, usando ID 1")
+        usuario_id = 1
+
+    db = Database(usuario_id=usuario_id)
+
+    print(f"✓ Usando usuario ID: {usuario_id}")
 
     # Obtener categorías
     categorias = db.obtener_categorias()

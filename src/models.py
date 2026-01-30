@@ -33,18 +33,7 @@ class Usuario:
         fecha_registro: Optional[datetime] = None,
         ultimo_acceso: Optional[datetime] = None
     ):
-        """
-        Inicializa un usuario.
 
-        Args:
-            id: Identificador único
-            nombre: Nombre del usuario
-            email: Correo electrónico
-            rol: Rol ('usuario' o 'admin')
-            activo: Si está activo
-            fecha_registro: Fecha de registro
-            ultimo_acceso: Último acceso
-        """
         self.id = id
         self.nombre = nombre
         self.email = email

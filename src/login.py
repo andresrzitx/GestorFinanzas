@@ -45,7 +45,7 @@ class VentanaLogin:
         """Centra la ventana en la pantalla."""
         self.root.update_idletasks()
         width = 500
-        height = 720
+        height = 900  # Aumentado para incluir todos los elementos
         x = (self.root.winfo_screenwidth() // 2) - (width // 2)
         y = (self.root.winfo_screenheight() // 2) - (height // 2)
         self.root.geometry(f'{width}x{height}+{x}+{y}')

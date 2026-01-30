@@ -32,9 +32,6 @@ class Database:
     def __init__(self, usuario_id: int = None):
         """
         Inicializa la conexión a la base de datos.
-
-        Args:
-            usuario_id: ID del usuario autenticado
         """
         self.usuario_id = usuario_id
 

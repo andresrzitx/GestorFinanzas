@@ -20,10 +20,6 @@ class CalendarioWidget(tk.Toplevel):
     def __init__(self, parent, callback: Callable[[str], None], fecha_inicial: Optional[str] = None):
         """
         Inicializa el calendario.
-        Args:
-            parent: Ventana padre
-            callback: Función que se ejecuta cuando se selecciona una fecha
-            fecha_inicial: Fecha inicial en formato YYYY-MM-DD (opcional)
         """
         super().__init__(parent)
         self.callback = callback
@@ -82,7 +78,7 @@ class CalendarioWidget(tk.Toplevel):
             self.after(20, self.fade_in)
 
     def center_window(self, parent):
-        """Centra la ventana en relación a su padre, asegurando que esté siempre visible."""
+        """Centra la ventana, asegurando que esté siempre visible."""
         parent.update_idletasks()
 
         # Dimensiones del calendario

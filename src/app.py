@@ -18,18 +18,13 @@ class AplicacionGastos:
     def __init__(self, root, usuario_id, nombre_usuario, rol='usuario'):
         """
         Inicializa la aplicación.
-        Args:
-            root: Ventana principal de Tkinter
-            usuario_id: ID del usuario autenticado
-            nombre_usuario: Nombre del usuario
-            rol: Rol del usuario ('usuario' o 'admin')
         """
         self.root = root
         self.usuario_id = usuario_id
         self.nombre_usuario = nombre_usuario
         self.rol = rol
         self.root.title(f"💰 FinanzApp - {nombre_usuario}" + (" [ADMIN]" if rol == 'admin' else ""))
-        self.root.geometry("1200x800")
+        self.root.geometry("1200x900")  # Ajustar altura de la ventana
 
         # Centrar ventana en la pantalla
         self.centrar_ventana()
@@ -131,7 +126,7 @@ class AplicacionGastos:
 
         self.combo_anio = ttk.Combobox(
             year_frame,
-            values=list(range(2020, 2031)),
+            values=[str(year) for year in range(2020, 2031)],  # Convertir a cadenas
             width=10,
             state='readonly',
             font=('SF Pro Display', 10)
