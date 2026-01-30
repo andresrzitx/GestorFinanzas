@@ -1,10 +1,3 @@
-"""
-Modelos de datos para FinanzApp.
-
-Este módulo define las clases de modelo que representan las entidades
-del sistema usando Programación Orientada a Objetos.
-"""
-
 from datetime import datetime
 from typing import Optional
 
@@ -45,18 +38,12 @@ class Usuario:
     def es_admin(self) -> bool:
         """
         Verifica si el usuario es administrador.
-
-        Returns:
-            bool: True si es admin, False en caso contrario
         """
         return self.rol == 'admin'
 
     def es_activo(self) -> bool:
         """
         Verifica si el usuario está activo.
-
-        Returns:
-            bool: True si está activo, False en caso contrario
         """
         return self.activo
 
@@ -67,9 +54,6 @@ class Usuario:
     def to_dict(self) -> dict:
         """
         Convierte el usuario a diccionario.
-
-        Returns:
-            dict: Representación del usuario
         """
         return {
             'id': self.id,
@@ -103,11 +87,6 @@ class Categoria:
     def __init__(self, id: int, nombre: str, descripcion: str = ""):
         """
         Inicializa una categoría.
-
-        Args:
-            id: Identificador único
-            nombre: Nombre de la categoría
-            descripcion: Descripción opcional
         """
         self.id = id
         self.nombre = nombre
@@ -116,9 +95,6 @@ class Categoria:
     def to_dict(self) -> dict:
         """
         Convierte la categoría a diccionario.
-
-        Returns:
-            dict: Representación de la categoría
         """
         return {
             'id': self.id,
@@ -186,45 +162,30 @@ class Gasto:
     def es_efectivo(self) -> bool:
         """
         Verifica si el pago fue en efectivo.
-
-        Returns:
-            bool: True si es efectivo, False si es tarjeta
         """
         return self.metodo_pago == 'efectivo'
 
     def es_tarjeta(self) -> bool:
         """
         Verifica si el pago fue con tarjeta.
-
-        Returns:
-            bool: True si es tarjeta, False si es efectivo
         """
         return self.metodo_pago == 'tarjeta'
 
     def get_mes(self) -> int:
         """
         Obtiene el mes del gasto.
-
-        Returns:
-            int: Número del mes (1-12)
         """
         return int(self.fecha.split('-')[1])
 
     def get_anio(self) -> int:
         """
         Obtiene el año del gasto.
-
-        Returns:
-            int: Año
         """
         return int(self.fecha.split('-')[0])
 
     def to_dict(self) -> dict:
         """
         Convierte el gasto a diccionario.
-
-        Returns:
-            dict: Representación del gasto
         """
         return {
             'id': self.id,
@@ -273,27 +234,18 @@ class Ingreso:
     def get_mes(self) -> int:
         """
         Obtiene el mes del ingreso.
-
-        Returns:
-            int: Número del mes (1-12)
         """
         return int(self.fecha.split('-')[1])
 
     def get_anio(self) -> int:
         """
         Obtiene el año del ingreso.
-
-        Returns:
-            int: Año
         """
         return int(self.fecha.split('-')[0])
 
     def to_dict(self) -> dict:
         """
         Convierte el ingreso a diccionario.
-
-        Returns:
-            dict: Representación del ingreso
         """
         return {
             'id': self.id,
@@ -355,9 +307,6 @@ class GrupoGasto:
     def to_dict(self) -> dict:
         """
         Convierte el grupo a diccionario.
-
-        Returns:
-            dict: Representación del grupo
         """
         return {
             'id': self.id,

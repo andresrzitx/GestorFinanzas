@@ -1,7 +1,3 @@
-"""
-Módulo de vistas para la aplicación de gastos mensuales.
-"""
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime

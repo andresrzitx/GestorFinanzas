@@ -1,9 +1,5 @@
-"""
-Utilidades para gestionar la base de datos.
-"""
-
-from database import Database
 import sys
+from src import Database
 
 
 def mostrar_menu():
